@@ -9,7 +9,7 @@ A collection of custom, interactive PowerShell commands built to turbocharge you
 Run this single command in your PowerShell terminal to automatically download and install the entire **Snake Suite** into your profile:
 
 ```powershell
-irm [https://raw.githubusercontent.com/Ligrys111/Snake_Windows_PS/main/Microsoft.PowerShell_profile.ps1](https://raw.githubusercontent.com/Ligrys111/Snake_Windows_PS/main/Microsoft.PowerShell_profile.ps1) | Out-File -FilePath $PROFILE -Append -Encoding utf8; & $PROFILE
+irm https://raw.githubusercontent.com/Ligrys111/Snake_Windows_PS/main/Microsoft.PowerShell_profile.ps1 | Out-File -FilePath $PROFILE -Append -Encoding utf8; & $PROFILE
 ```
 ## 🚀 Features
 * ```Snake```: Animated retro arcade snake running natively inside your PowerShell terminal.
