@@ -17,6 +17,7 @@ irm https://raw.githubusercontent.com/Ligrys111/Snake_Windows_PS/main/Microsoft.
 * ```Snake-Matrix```: The iconic digital rain effect from The Matrix animated inside your console window.
 * ```Snake-Weather```: Lightweight, instant weather monitoring that geolocates any city automatically (even when typed without Polish diacritics like krakow, wroclaw, or warszawa).
 * ```Snake-Help```: A beautiful terminal UI showing the full command manual with custom ASCII graphics.
+* ```Snake-Downloader```: Secure, YouTube downloader that automatically bypasses tracking, ads, and signature filters using modern API proxy tunnels.
 
 ## 📖 Command Reference
 ```Snake-Help```
@@ -26,15 +27,15 @@ Displays the manual interface featuring custom ASCII art and a list of available
 Fetches the exact current temperature and weather conditions from the stable Open-Meteo and OpenStreetMap APIs.
 * **Persistent City Storage**: It remembers your city choice after the first run so you don't have to re-type it.
 * **Reset Configuration**: Want to change your saved location? Simply run:
-
 ```Snake-Weather -Reset```
+
 
 ---
 
 ## 🎨 Preview
 
 ```text
-     ____        ___  _  _    __    _  _  ____ 
+____        ___  _  _    __    _  _  ____ 
     / . .\      / __)( \( )  /__\  ( )/ )( ___)
     \  ---<     \__ \ )  (  /(__)\  )  (  )__) 
      \  \       (___/(_)\_)(__)(__)(_)\_)(____)
@@ -51,6 +52,7 @@ Fetches the exact current temperature and weather conditions from the stable Ope
   Snake-Matrix        |  Triggers the animated Matrix digital rain effect.
   Snake-Weather       |  Fetches accurate current weather and temperature.
   Snake-Weather -Reset|  Resets the saved city configuration.
+  Snake-Downloader    |  Securely downloads YouTube videos via Cobalt API.
 ==================================================================
 ```
 ## 🔒 Requirements
