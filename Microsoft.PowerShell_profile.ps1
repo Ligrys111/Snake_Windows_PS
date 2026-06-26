@@ -434,7 +434,6 @@ function Snake-Help {
     $cmdColor   = "Cyan"
     $titleColor = "Yellow"
 
-
     $ui = $Host.UI.RawUI
     
     $snakeArt = @(
@@ -455,25 +454,21 @@ function Snake-Help {
         "(___/(_)\_)(__)(__)(_)\_)(____)"
     )
 
-
     for ($i = 0; $i -lt $snakeArt.Count; $i++) {
         $ui.CursorPosition = New-Object System.Management.Automation.Host.Coordinates (0, $i)
         Write-Host $snakeArt[$i] -ForegroundColor $snakeColor -NoNewline
     }
-
 
     for ($i = 0; $i -lt $titleArt.Count; $i++) {
         $ui.CursorPosition = New-Object System.Management.Automation.Host.Coordinates (18, ($i + 2))
         Write-Host $titleArt[$i] -ForegroundColor $titleColor
     }
 
-
     $ui.CursorPosition = New-Object System.Management.Automation.Host.Coordinates (0, 9)
 
     Write-Host "==================================================================" -ForegroundColor Gray
     Write-Host "  COMMAND             |  DESCRIPTION" -ForegroundColor Yellow
     Write-Host "==================================================================" -ForegroundColor Gray
-
 
     Write-Host "  Snake               " -ForegroundColor $cmdColor -NoNewline
     Write-Host "|  Starts the animated retro arcade snake game." -ForegroundColor $textColor
@@ -489,6 +484,9 @@ function Snake-Help {
 
     Write-Host "  Snake-Weather -Reset" -ForegroundColor $cmdColor -NoNewline
     Write-Host "|  Resets the saved city configuration." -ForegroundColor $textColor
+
+    Write-Host "  Snake-Downloader    " -ForegroundColor $cmdColor -NoNewline
+    Write-Host "|  Securely downloads YouTube videos bypassing filters via Cobalt API." -ForegroundColor $textColor
 
     Write-Host "==================================================================" -ForegroundColor Gray
     Write-Host "Type any command above to start! Press Ctrl+C to exit loops.`n" -ForegroundColor DarkGray
