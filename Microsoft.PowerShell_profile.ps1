@@ -1,3 +1,9 @@
+﻿Set-Alias -Name s-n -Value Snake
+Set-Alias -Name s-w -Value Snake-Weather
+Set-Alias -Name s-m -Value Snake-Matrix
+Set-Alias -Name s-d -Value Snake-Downloader
+Set-Alias -Name s-h -Value Snake-Help
+
 function Snake {
     <#
     .SYNOPSIS
@@ -26,6 +32,7 @@ function Snake {
     for ($i = 0; $i -lt 15; $i++) {
         $snake += [PSCustomObject]@{ X = 40 - $i; Y = 12; Char = $charHoriz }
     }
+
 
     $dirX = 1
     $dirY = 0
@@ -485,4 +492,109 @@ function Snake-Help {
 
     Write-Host "==================================================================" -ForegroundColor Gray
     Write-Host "Type any command above to start! Press Ctrl+C to exit loops.`n" -ForegroundColor DarkGray
+}
+
+function Snake-Downloader {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$Url
+    )
+
+    Clear-Host
+    Write-Host "[*] Initializing custom Snake-Downloader..." -ForegroundColor Cyan
+    Write-Host "[*] Analyzing link stability..." -ForegroundColor Gray
+
+    $Headers = @{
+        "Accept" = "application/json"
+        "Content-Type" = "application/json"
+    }
+
+    $Body = @{
+        url = $Url
+        videoQuality = "720"
+        filenameStyle = "basic"
+    } | ConvertTo-Json
+
+    $ApiEndpoints = @(
+        "https://cobalt-api.hyper.lol/",
+        "https://api.cobalt.blackcat.sweeux.org/",
+        "https://cobalt.meowing.de/",
+        "https://api.co.rooot.gay/"
+    )
+
+    $Response = $null
+    $ActiveNode = ""
+
+    foreach ($ApiUrl in $ApiEndpoints) {
+        try {
+            $ActiveNode = ($ApiUrl -split '/')[2]
+            Write-Host "[*] Testing secure API tunnel ($ActiveNode)..." -ForegroundColor Gray
+            $Response = Invoke-RestMethod -Uri $ApiUrl -Method Post -Headers $Headers -Body $Body -TimeoutSec 15
+            if ($null -ne $Response) { break }
+        }
+        catch {
+            Write-Host "[!] Node ($ActiveNode) is rate-limited or busy. Switching tunnel..." -ForegroundColor Yellow
+        }
+    }
+
+    if ($null -eq $Response) {
+        Write-Host "[-] All autorski API nodes are currently overloaded. Please try again in a few moments." -ForegroundColor Red
+        return
+    }
+
+    try {
+        $DirectLink = $null
+
+        if ($Response.status -eq "stream" -or $Response.status -eq "tunnel" -or $Response.status -eq "redirect") {
+            $DirectLink = $Response.url
+        }
+        elseif ($Response.status -eq "picker" -and $Response.picker.Count -gt 0) {
+            $DirectLink = $Response.picker[0].url
+        }
+
+        if ([string]::IsNullOrEmpty($DirectLink) -eq $false) {
+            $Filename = "SnakeVideo_$(Get-Date -Format 'yyyyMMdd_HHmmss').mp4"
+            
+            $RegistryPath = "HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders"
+            $DownloadDir = (Get-ItemProperty -Path $RegistryPath)."{374DE290-123F-4565-9164-39C4925E467B}"
+            $DownloadDir = $ExecutionContext.InvokeCommand.ExpandString($DownloadDir)
+            
+            if (-not (Test-Path $DownloadDir)) {
+                $DownloadDir = Join-Path $HOME "Downloads"
+                if (-not (Test-Path $DownloadDir)) {
+                    New-Item -ItemType Directory -Path $DownloadDir -Force | Out-Null
+                }
+            }
+            
+            $Destination = Join-Path $DownloadDir $Filename
+
+            Write-Host "[+] Stream interface resolved! Mode: $($Response.status)" -ForegroundColor Green
+            Write-Host "[*] Downloading file directly to disk..." -ForegroundColor Cyan
+            Write-Host "--------------------------------------------------------" -ForegroundColor Gray
+
+            $BrowserUserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+            Invoke-WebRequest -Uri $DirectLink -OutFile $Destination -UserAgent $BrowserUserAgent
+
+            Clear-Host
+            Write-Host "========================================================" -ForegroundColor Gray
+            Write-Host "              🐍 DOWNLOAD COMPLETE! 🐍                  " -ForegroundColor Green
+            Write-Host "========================================================" -ForegroundColor Gray
+            Write-Host @"
+               ____
+              / . .\ 
+              \  ---<      File: $Filename
+               \  \        Path: $Destination
+         _______/  /       
+        (_________/        Status: 100% Secured & Autorski!
+"@ -ForegroundColor Green
+            Write-Host "`n[+] Success! Video downloaded safely without any external binaries or malware risk.`n" -ForegroundColor Green
+        } else {
+            Write-Host "[-] API responded, but did not provide a direct download URL. Status: $($Response.status)" -ForegroundColor Red
+        }
+    }
+    catch {
+        Write-Host "[-] Critical error during file write operation." -ForegroundColor Red
+        Write-Host "[!] Error details: $_" -ForegroundColor DarkGray
+    }
 }
